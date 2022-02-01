@@ -16,15 +16,16 @@
         <Grid Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Button Grid.Row="0" Width="100" Height="20">Test</Button>
-            <Border Grid.Row="1" Margin="10">
-                <ListBox BorderBrush="SlateGray" BorderThickness="1">
-                    <ListBoxItem>ListBox Item #1</ListBoxItem>
-                    <ListBoxItem>ListBox Item #2</ListBoxItem>
-                    <ListBoxItem>ListBox Item #3</ListBoxItem>
-                </ListBox>
+            <StackPanel Grid.Row="0">
+                <Button Width="100" Height="20" Command="{Binding Path=UploadFiles}">Upload</Button>
+                <TextBox Width="100" Text="{Binding Path=Seperator}" />
+            </StackPanel>
+            <Separator Grid.Row="1"/>
+            <Border Grid.Row="2" Margin="10">
+                <ListBox BorderBrush="SlateGray" BorderThickness="1" ItemsSource="{Binding Path=FileNames}"></ListBox>
             </Border>
         </Grid>
         <StatusBar Grid.Row="1" BorderThickness="1" BorderBrush="LightGray">
