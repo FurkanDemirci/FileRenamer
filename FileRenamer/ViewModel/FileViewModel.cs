@@ -11,32 +11,42 @@ namespace FileRenamer.ViewModel
     public class FileViewModel : ViewModelBase
     {
         private OpenFileDialog _openFileDialog;
+
         private readonly DelegateCommand _uploadFiles;
+        private readonly DelegateCommand _renameFiles;
 
-        private List<string> _fileNames;
+        private List<File> _fileNames;
+        private bool _isSelected;
+        private string _originalFileName;
 
-        public List<string> FileNames
+        public List<File> FileNames
         {
             get { return _fileNames; }
             set { SetProperty(ref _fileNames, value); }
         }
 
-        private string _seperator;
-
-        public string Seperator
+        public string OriginalFileName
         {
-            get { return _seperator; }
-            set { SetProperty(ref _seperator, value); }
+            get { return _originalFileName; }
+            set { SetProperty(ref _originalFileName, value); }
         }
 
+        public bool IsSelected
+        {
+            get { return _isSelected; }
+            set { SetProperty(ref _isSelected, value); }
+        }
 
         public ICommand UploadFiles => _uploadFiles;
+        public ICommand RenameFiles => _renameFiles;
 
         public FileViewModel()
         {
             // In progress
             _uploadFiles = new DelegateCommand(OnUploadFiles, CanUploadFiles);
-            _seperator = "seperator";
+            _renameFiles = new DelegateCommand(OnRenameFiles, CanRenameFiles);
+
+            _originalFileName = "...";
         }
 
         public void OnUploadFiles(object commandParameter)
@@ -47,11 +57,27 @@ namespace FileRenamer.ViewModel
             };
 
             _openFileDialog.ShowDialog();
-            FileNames = new List<string>(_openFileDialog.SafeFileNames);
-            Trace.WriteLine(Seperator);
+            FileNames = new List<File>();
+
+            foreach (var fileName in _openFileDialog.SafeFileNames)
+            {
+                FileNames.Add(new File { Name = fileName, IsSelected = false });
+            }
+
+            OriginalFileName = _openFileDialog.SafeFileName;
+        }
+
+        public void OnRenameFiles(object commandParameter)
+        {
+            Trace.WriteLine(FileNames);
         }
 
         public bool CanUploadFiles(object commandParameter)
+        {
+            return true;
+        }
+
+        public bool CanRenameFiles(object commandParameter)
         {
             return true;
         }
